@@ -26,6 +26,7 @@ import typing as t
 from azure.core.credentials import AzureNamedKeyCredential
 from azure.storage.blob.aio import BlobServiceClient
 from azure.storage.blob import BlobProperties, StandardBlobTier
+from azure.identity import DefaultAzureCredential
 from medusa.storage.abstract_storage import AbstractStorage, AbstractBlob, AbstractBlobMetadata, ObjectDoesNotExistError
 from pathlib import Path
 from retrying import retry
@@ -43,10 +44,13 @@ class AzureStorage(AbstractStorage):
         credentials_file = Path(config.key_file).expanduser()
         with open(credentials_file, "r") as f:
             credentials_dict = json.loads(f.read())
-            self.credentials = AzureNamedKeyCredential(
-                name=credentials_dict["storage_account"],
-                key=credentials_dict["key"]
-            )
+            if "key" in credentials_dict.keys():
+                self.credentials = AzureNamedKeyCredential(
+                    name=credentials_dict["storage_account"],
+                    key=credentials_dict["key"]
+                )
+            else:
+                self.credentials = DefaultAzureCredential()
         self.account_name = self.credentials.named_key.name
         self.bucket_name = config.bucket_name
 
