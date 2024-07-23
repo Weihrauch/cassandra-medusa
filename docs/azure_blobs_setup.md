@@ -5,6 +5,8 @@ Azure Blob Storage setup
 
 Create a new storage account or use an existing one which will be used to store the backups. Ideally, do not enable public access. Under the `Settings`, find `Access keys`. Note the `storageaccountname` and `Key`. Create a file called `medusa-azure-credentials` in the following format:
 
+If key is ommited authentification done throught default azure authentication methods : https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication-overview#sequence-of-authentication-methods-when-you-use-defaultazurecredential
+
 ```json
 {
     "storage_account": "YOUR_STORAGE_ACCOUNT_NAME",
